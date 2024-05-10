@@ -1,0 +1,8 @@
+complaint,output
+"I was not able to do payment, the website was lagging","domain:['hotel'],tags:['website'],priority:['2'],attributes:[],sentiment:['negative']"
+"The hotel room was not clean, it was dusty , room number is 50C, hotel name is taj_hotel","domain:['hotel'],tags:['cleaning'],priority:['2'],attributes:['hotel=taj_hotel','room=50C'],sentiment:['negative']"
+"The driver was not friendly, he didn't pick up on time, and was driving hastly, his driver_id is 12345","domain:['transport'],tags:['driver'],priority:['2'],attributes:['driver_id=12345'],sentiment:['negative']"
+"The driver was late by 1 hour, my flight missed, my booking_id is 8978","domain:['transport'],tags:['driver'],priority:['2'],attributes:['booking_id=8978'],sentiment:['negative']"
+"It took a lot of time to checkin the hotel, the staff was not at reception desk, hotel name is abc_hotel","domain:['hotel'],tags:['checkin','staff'],priority:['2'],attributes:['hotel=abc_hotel'],sentiment:['negative']"
+"the light were not working in room 56B in abc_hotel","domain:['hotel'],tags:['room'],priority:['1'],attributes:['room=56B'],sentiment:['negative']"
+"the application was not wokring , i wanted to book a flight but no flights were showing up","domain:['transport'],tags:['booking','application'],priority:['2'],attributes:[],sentiment:['negative']"

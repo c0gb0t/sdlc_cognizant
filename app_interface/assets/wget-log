@@ -1,0 +1,7 @@
+--2023-10-26 08:18:13--  https://github-production-user-asset-6210df.s3.amazonaws.com/143605527/278259940-22b94def-3467-4815-a962-889ed8262ed8.png?X-Amz-Algorithm=AWS4-HMAC-SHA256
+Resolving github-production-user-asset-6210df.s3.amazonaws.com (github-production-user-asset-6210df.s3.amazonaws.com)... 52.217.4.52, 52.216.239.83, 52.217.170.57, ...
+Connecting to github-production-user-asset-6210df.s3.amazonaws.com (github-production-user-asset-6210df.s3.amazonaws.com)|52.217.4.52|:443... connected.
+HTTP request sent, awaiting response... 400 Bad Request
+2023-10-26 08:18:14 ERROR 400: Bad Request.
+
+![Alt text](image.png)
