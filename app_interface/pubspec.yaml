@@ -70,9 +70,7 @@ flutter:
   assets:
     - assets/
     - assets/svgs/
-    - assets/shell.png
-    - assets/mh.jpg
-    - assets/qx-logo-1r.png
+
 
   fonts:
     - family: OpenSans

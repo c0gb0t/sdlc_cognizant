@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ComplaintModel {
+class ContentModel {
   String id;
   String senderId;
   String lang;
@@ -14,7 +14,7 @@ class ComplaintModel {
 
 
 
-  ComplaintModel({
+  ContentModel({
     this.id="",
     this.senderId='',
     this.lang = "1",
@@ -28,10 +28,10 @@ class ComplaintModel {
 
   });
 
-  factory ComplaintModel.fromFirestore(DocumentSnapshot data) {
+  factory ContentModel.fromFirestore(DocumentSnapshot data) {
     Map<String,dynamic> mapData=data.data() as Map<String,dynamic> ;
 
-    return ComplaintModel(
+    return ContentModel(
       id:data.id,
       senderId:mapData['senderId']??'mh_bhashini',
       lang: mapData['lang'] ?? "null",

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mhs_pred_app/chatbot/models/complaint_model.dart';
+import 'package:mhs_pred_app/chatbot/models/content_model.dart';
 import 'package:mhs_pred_app/utils/date_time_helper.dart';
 
 class TextFormat extends StatefulWidget {
-  final ComplaintModel message;
+  final ContentModel message;
   final bool isMe;
 
   const TextFormat(this.message, this.isMe, {super.key});
