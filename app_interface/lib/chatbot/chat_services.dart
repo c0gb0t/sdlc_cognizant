@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs_pred_app/chatbot/models/user_main.dart';
 import 'package:mhs_pred_app/main.dart';
-import './models/complaint_model.dart';
+import './models/content_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -40,13 +40,13 @@ Future<String> uploadAudioFile(String audioFilePath) async{
   }
 
 
-Stream<List<ComplaintModel>> streamComplaints(UserModel? user) {
+Stream<List<ContentModel>> streamComplaints(UserModel? user) {
   var ref = _db.collection(coll_name).doc(user?.uid).collection('pComplaints').orderBy('id',descending: true).limit(1);
   // int len=await ref.snapshots().length;
   // debugPrint(len);
   return ref.snapshots().map((list) => list.docs.map((doc) {
         debugPrint(doc.data().toString());
-        return ComplaintModel.fromFirestore(
+        return ContentModel.fromFirestore(
           doc,
         );
       }).toList());
@@ -54,7 +54,7 @@ Stream<List<ComplaintModel>> streamComplaints(UserModel? user) {
 }
 
 Future<String> sendComplaint(UserModel user,{required String lang,String complaintText='', String audioURL='',String rType="1"}) async {
-  ComplaintModel complaint = ComplaintModel(timestamp: Timestamp.now());
+  ContentModel complaint = ContentModel(timestamp: Timestamp.now());
   complaint.id = Timestamp.now().millisecondsSinceEpoch.toString();
   complaint.senderId =
       rType == '0' ? "backend@red" : "${user.name?.split(' ')[0]}@red";
@@ -91,7 +91,7 @@ Future<String> sendComplaint(UserModel user,{required String lang,String complai
   // txt = jsonDecode(response.body)['output'];
   //
   // // txt='chatbot respone.......';
-  // complaint = ComplaintModel(timestamp: Timestamp.now());
+  // complaint = ContentModel(timestamp: Timestamp.now());
   // complaint.senderId = 'chatbot' + "@red";
   // complaint.rType = rType;
   // complaint.timestamp = Timestamp.now();
