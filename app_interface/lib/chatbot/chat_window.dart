@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -46,10 +47,10 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
   bool processingData = false;
   bool isExpanded = false;
   double composeHeight = 150000;
-  TextEditingController complaintTextController = new TextEditingController();
-  TextEditingController categoryTextController = new TextEditingController();
-  String selectedLang = 'english';
-
+  TextEditingController filePathsTextController = new TextEditingController();
+  TextEditingController fileUrlsTextController = new TextEditingController();
+  List<String> filePaths = [];
+  List<PlatformFile> files = [];
 
   @override
   Widget build(BuildContext context) {
@@ -92,14 +93,12 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-
                       SizedBox(
                         height: 20,
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
-
                         children: [
                           Container(
                             padding: EdgeInsets.all(
@@ -110,7 +109,7 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(40))),
+                                    BorderRadius.all(Radius.circular(40))),
                             child: Padding(
                                 padding: EdgeInsets.only(
                                   top: 20,
@@ -122,29 +121,54 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                                     child: TextField(
                                       maxLines: null,
                                       keyboardType: TextInputType.multiline,
-                                      controller: complaintTextController,
+                                      controller: filePathsTextController,
                                       textCapitalization:
-                                      TextCapitalization.sentences,
+                                          TextCapitalization.sentences,
                                       onChanged: (value) {},
-                                      // onSubmitted: (value) {
-                                      //   complaintTextController.clear();
-                                      //   String context = "context";
-                                      //   sendComplaint(widget.user!, context,
-                                      //       value, "1");
-                                      // },
-                                      decoration: const InputDecoration.collapsed(
+                                      decoration:
+                                          const InputDecoration.collapsed(
                                         // border: InputBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
                                         hintText:
-                                        'Selected files to upload will appear here',
+                                            'Selected files to upload will appear here',
                                       ),
                                     ),
                                   ),
-                                  IconButton(onPressed: (){}, icon: Icon(Icons.cloud_upload,size: 80,color: Colors.blue,))
-                                  // ElevatedButton(child:Text("upload files"),onPressed: (){},),
+                                  IconButton(
+                                      onPressed: () async {
+                                        FilePickerResult? result =
+                                            await FilePicker.platform
+                                                .pickFiles(allowMultiple: true);
 
+                                        if (result != null) {
+                                          // files = result.paths
+                                          //     .map((path) => File(path!))
+                                          //     .toList();
+                                          files = result.files;
+                                          print(files.length);
+                                          files.forEach((f) {
+                                            filePaths.add(f.name);
+                                          });
+                                          print(
+                                              "------------------------------------\n got file:${filePaths}");
+                                          filePathsTextController.value =
+                                              TextEditingValue(
+                                                  text: filePaths.join('\n'));
+                                          setState(() {});
+                                        } else {
+                                          // User canceled the picker
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.cloud_upload,
+                                        size: swidth * 0.05,
+                                        color: Colors.blue,
+                                      ))
+                                  // ElevatedButton(child:Text("upload files"),onPressed: (){},),
                                 ])),
                           ),
-                          SizedBox(width: 20,),
+                          SizedBox(
+                            width: 20,
+                          ),
                           Container(
                             padding: EdgeInsets.all(
                               20,
@@ -154,7 +178,7 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(40))),
+                                    BorderRadius.all(Radius.circular(40))),
                             child: Padding(
                                 padding: EdgeInsets.only(
                                   top: 20,
@@ -166,24 +190,22 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                                     child: TextField(
                                       maxLines: null,
                                       keyboardType: TextInputType.multiline,
-                                      controller: complaintTextController,
+                                      controller: fileUrlsTextController,
                                       textCapitalization:
-                                      TextCapitalization.sentences,
+                                          TextCapitalization.sentences,
                                       onChanged: (value) {},
-                                      decoration: const InputDecoration.collapsed(
+                                      decoration:
+                                          const InputDecoration.collapsed(
                                         // border: InputBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
                                         hintText:
-                                        'Add urls of files that need to be processed',
+                                            'Add urls of files that need to be processed',
                                       ),
                                     ),
                                   ),
-
                                 ])),
                           ),
-
                         ],
                       ),
-
                       SizedBox(
                         height: 30,
                       ),
@@ -207,15 +229,18 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                                 BorderRadius.all(Radius.circular(40))),
                         child: Column(children: [
                           StreamBuilder(
-                            stream: streamComplaints(widget.user),
+                            stream: streamContents(widget.user),
                             builder: (context, snapshots) {
                               ContentModel? pc, tc;
                               // lcid='1712420879057';
+                              print(snapshots);
+                              print(
+                                  "snapshot data-----------${snapshots.hasData}");
                               if (snapshots.hasData &&
                                   snapshots.data?.length != 0) {
                                 tc = snapshots.data?.first;
                                 debugPrint(
-                                    "------------------got tc ${tc?.getMap()}");
+                                    "------------------got tc ${tc?.getMap()['id']}");
                                 debugPrint(
                                     "-----------------------lcid =${lcid}");
                               }
@@ -224,17 +249,17 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                               }
 
                               if (pc != null && processingData == true) {
-                                if (pc?.audioURL != '') {
-                                  complaintTextController.value = TextEditingValue(
-                                      text:
-                                          "IndicWav2Vec output:${pc?.audioText}\n${pc.lang == 'english' ? '' : "IndicTrans2 output:${pc?.transText}"}");
-                                } else {
-                                  complaintTextController.value = TextEditingValue(
-                                      text:
-                                          "Complaint:${pc?.complaintText}\n${pc.lang == 'english' ? '' : "IndicTrans2 output:${pc?.transText}"}");
-                                }
-                                categoryTextController.value = TextEditingValue(
-                                    text: pc!.output.replaceAll(',', '\n'));
+                                // if (pc?.audioURL != '') {
+                                //   complaintTextController.value = TextEditingValue(
+                                //       text:
+                                //           "IndicWav2Vec output:${pc?.audioText}\n${pc.lang == 'english' ? '' : "IndicTrans2 output:${pc?.transText}"}");
+                                // } else {
+                                //   complaintTextController.value = TextEditingValue(
+                                //       text:
+                                //           "Complaint:${pc?.complaintText}\n${pc.lang == 'english' ? '' : "IndicTrans2 output:${pc?.transText}"}");
+                                // }
+                                // categoryTextController.value = TextEditingValue(
+                                //     text: pc!.output.replaceAll(',', '\n'));
 
                                 if (processingData == true) {
                                   Navigator.pop(context);
@@ -249,39 +274,47 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                                 padding: const EdgeInsets.all(30),
                                 width: swidth * 0.6,
                                 height: sheight * 0.18,
-                                child:
-                                    Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
                                       FloatingActionButton.extended(
-                                        label: Text('View Summary',style: TextStyle(color: Colors.white),), // <-- Text
+                                        label: Text(
+                                          'View Summary',
+                                          style: TextStyle(color: Colors.white),
+                                        ), // <-- Text
                                         backgroundColor: Colors.blue,
-                                        icon: Icon( // <-- Icon
+                                        icon: Icon(
+                                          // <-- Icon
                                           Icons.remove_red_eye,
                                           size: 50.0,
                                           color: Colors.white,
                                         ),
                                         onPressed: () {
-                                          pc=ContentModel(timestamp: Timestamp.now());
+                                          pc == null
+                                              ? ContentModel(
+                                                  timestamp: Timestamp.now())
+                                              : pc;
                                           showSummary(pc!);
                                         },
                                       ),
-                                      SizedBox(width: 30,),
+                                      SizedBox(
+                                        width: 30,
+                                      ),
                                       FloatingActionButton.extended(
-                                        label: Text('Download Summary (PDF)',style: TextStyle(color: Colors.white),), // <-- Text
+                                        label: Text(
+                                          'Download Summary (PDF)',
+                                          style: TextStyle(color: Colors.white),
+                                        ), // <-- Text
                                         backgroundColor: Colors.blue,
-                                        icon: Icon( // <-- Icon
+                                        icon: Icon(
+                                          // <-- Icon
                                           Icons.download,
                                           size: 50.0,
                                           color: Colors.white,
                                         ),
                                         onPressed: () {},
                                       ),
-
-
-                                    ]
-                                    ),
-
+                                    ]),
                               );
                             },
                           ),
@@ -298,103 +331,97 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
     ]));
   }
 
-  showSummary(ContentModel? pc){
-
+  showSummary(ContentModel? pc) {
     showDialog(
         context: context,
         // barrierColor: Colors.white,
-        builder: (BuildContext context) =>Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+        builder: (BuildContext context) => Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
             elevation: 16,
-        child: Container(
-            decoration: BoxDecoration(
-              // border: Border.all(
-              //   color: Colors.red[500],
-              // ),
-              borderRadius: BorderRadius.all(Radius.circular(20)),),
-          // color: Colors.white,
-          height: sheight,
-          width: swidth*0.5,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-
-            children: [
-Container(
-  alignment: Alignment.center,
-  height:sheight*0.2,
-  width:swidth,
-  child:
-              ListView.builder(
-
-                  physics: ClampingScrollPhysics(),
-                  itemCount: 3,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                                width: index==1?150.0:100.0,
-                                height: index==1?200.0:60.0,
-                                child: Image.asset(
-                                  index==0?"assets/azure.png":index==1?"assets/cognizant.jpg":"assets/azure.png",
-                                  fit: BoxFit.cover,
-                                ))),
-                      ),
-                    );
-                  }),),
-              SizedBox(height: 30,),
-
-              Container(
-                padding: EdgeInsets.all(
-                  20,
-                ),
-                width: swidth * 0.4,
-                height: sheight * 0.65,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(40))),
-                child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                // border: Border.all(
+                //   color: Colors.red[500],
+                // ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              // color: Colors.white,
+              height: sheight,
+              width: swidth * 0.5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    height: sheight * 0.2,
+                    width: swidth,
+                    child: ListView.builder(
+                        physics: ClampingScrollPhysics(),
+                        itemCount: 3,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                      width: index == 1 ? 150.0 : 100.0,
+                                      height: index == 1 ? 200.0 : 60.0,
+                                      child: Image.asset(
+                                        index == 0
+                                            ? "assets/azure.png"
+                                            : index == 1
+                                                ? "assets/cognizant.jpg"
+                                                : "assets/azure.png",
+                                        fit: BoxFit.cover,
+                                      ))),
+                            ),
+                          );
+                        }),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(
+                      20,
                     ),
-                    child:
-                      SizedBox(
+                    width: swidth * 0.4,
+                    height: sheight * 0.65,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: 20,
+                      ),
+                      child: SizedBox(
                         width: swidth * 0.3,
                         height: sheight * 0.5,
                         child: TextFormField(
-                          initialValue:'No summary to display ,please process the files to view the summary',
+                          initialValue: pc?.output,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
                           // controller: complaintTextController,
-                          textCapitalization:
-                          TextCapitalization.sentences,
+                          textCapitalization: TextCapitalization.sentences,
                           onChanged: (value) {},
 
                           decoration: const InputDecoration.collapsed(
                             // border: InputBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-                            hintText:
-                            'Summary will appear here...',
+                            hintText: 'Summary will appear here...',
                           ),
                         ),
                       ),
-
                     ),
+                  ),
+                ],
               ),
-            ],
-
-          ),
-        )));
-
-
-
+            )));
   }
-
 
   _buildSubmitButton() {
     return AnimatedContainer(
@@ -403,7 +430,6 @@ Container(
       height: composeHeight,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 250),
-
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         height: composeHeight,
         child: Column(
@@ -443,14 +469,16 @@ Container(
                                 return LoadingText(
                                     loadingText: "Uploading Data");
                               });
-                          String audioFileUrl = audioFilePath == ''
-                              ? ''
-                              : await uploadAudioFile(audioFilePath);
-                          String complaintText = complaintTextController.text;
-                          lcid = await sendComplaint(widget.user!,
-                              lang: selectedLang.toLowerCase(),
-                              complaintText: complaintText,
-                              audioURL: audioFileUrl);
+                          List<String> upFileUrls =
+                              filePaths == [] ? [] : await uploadFiles(files);
+                          List<String> fileUrls =
+                              fileUrlsTextController.text.split('\n');
+                          fileUrls = fileUrls.where((x) {
+                            return x != '';
+                          }).toList();
+
+                          lcid = await sendContent(widget.user!,
+                              fileUrls: upFileUrls + fileUrls);
                           Navigator.pop(context);
 
                           print("data uploaded-------------------");

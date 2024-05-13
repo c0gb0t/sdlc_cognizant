@@ -4,8 +4,8 @@ import 'package:mhs_pred_app/chatbot/models/user_main.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import './chatbot/chat_window.dart'
 
-var coll_name = 'fms_cognizant';
-final UserModel user = UserModel(uid: "fms_cognizant_user", name: "user");
+var coll_name = 'sdlc_cognizant';
+final UserModel user = UserModel(uid: "sdlc_cognizant_user", name: "user");
 
 // var firebaseConfig = {
 //   apiKey: "AIzaSyD5ndkXBa_CSC5biea5Cg-_mp28-1zUmHs",
