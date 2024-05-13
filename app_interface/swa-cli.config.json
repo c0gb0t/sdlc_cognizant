@@ -6,7 +6,9 @@
       "outputLocation": "build/web",
       "appBuildCommand": "flutter build web",
       "run": "flutter run --web-port 8080",
-      "appDevserverUrl": "http://localhost:8080"
+      "appDevserverUrl": "http://localhost:8080",
+      "appName": "app-interface",
+      "resourceGroup": "app-interface-rg"
     }
   }
 }
