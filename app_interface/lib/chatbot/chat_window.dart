@@ -169,41 +169,41 @@ class _ChatWindowPageState extends State<ChatWindowPage> {
                           SizedBox(
                             width: 20,
                           ),
-                          Container(
-                            padding: EdgeInsets.all(
-                              20,
-                            ),
-                            width: swidth * 0.3,
-                            height: sheight * 0.35,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(40))),
-                            child: Padding(
-                                padding: EdgeInsets.only(
-                                  top: 20,
-                                ),
-                                child: Row(children: [
-                                  SizedBox(
-                                    width: swidth * 0.27,
-                                    height: sheight * 0.5,
-                                    child: TextField(
-                                      maxLines: null,
-                                      keyboardType: TextInputType.multiline,
-                                      controller: fileUrlsTextController,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      onChanged: (value) {},
-                                      decoration:
-                                          const InputDecoration.collapsed(
-                                        // border: InputBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-                                        hintText:
-                                            'Add urls of files that need to be processed',
-                                      ),
-                                    ),
-                                  ),
-                                ])),
-                          ),
+                          // Container(
+                          //   padding: EdgeInsets.all(
+                          //     20,
+                          //   ),
+                          //   width: swidth * 0.3,
+                          //   height: sheight * 0.35,
+                          //   decoration: BoxDecoration(
+                          //       color: Colors.white,
+                          //       borderRadius:
+                          //           BorderRadius.all(Radius.circular(40))),
+                          //   child: Padding(
+                          //       padding: EdgeInsets.only(
+                          //         top: 20,
+                          //       ),
+                          //       child: Row(children: [
+                          //         SizedBox(
+                          //           width: swidth * 0.27,
+                          //           height: sheight * 0.5,
+                          //           child: TextField(
+                          //             maxLines: null,
+                          //             keyboardType: TextInputType.multiline,
+                          //             controller: fileUrlsTextController,
+                          //             textCapitalization:
+                          //                 TextCapitalization.sentences,
+                          //             onChanged: (value) {},
+                          //             decoration:
+                          //                 const InputDecoration.collapsed(
+                          //               // border: InputBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
+                          //               hintText:
+                          //                   'Add urls of files that need to be processed',
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ])),
+                          // ),
                         ],
                       ),
                       SizedBox(

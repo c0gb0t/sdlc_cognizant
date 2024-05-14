@@ -1,4 +1,4 @@
-class ContentModel():
+class ContentModel(object):
     def __init__(self, id, senderId,fileUrls,timestamp,output,ots):
         self.id = id
         self.senderId = senderId
@@ -7,7 +7,8 @@ class ContentModel():
         self.output=output
         self.ots=ots
     
-    def from_dict(self,data):
+    def from_dict(data):
+        # print(data)
         return ContentModel(
             id=data.get('id'),
             senderId=data.get('senderId'),
